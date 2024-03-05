@@ -11,15 +11,15 @@ public class Main {
 
     public static String calc(String input) throws Exception{
 
-        String [] operands = input.split("[+\\-*/]");
+        String operator = "";
+        String [] operands = new String[0];
+
+        if (input.contains(" + ")) {operator = "+";operands = input.split(" \\+ ");}
+        else if (input.contains(" - ")) {operator = "-";operands = input.split(" - ");}
+        else if (input.contains(" * ")) {operator = "*";operands = input.split(" \\* ");}
+        else if (input.contains(" / ")) {operator = "/";operands = input.split(" / ");}
 
         if (operands.length != 2) {throw new Exception("Неподдерживаемая математическая операция");}
-
-        String operator = "";
-        if (input.contains("+")) {operator = "+";}
-        else if (input.contains("-")) {operator = "-";}
-        else if (input.contains("*")) {operator = "*";}
-        else if (input.contains("/")) {operator = "/";}
 
         String operand1 = operands[0];
         String operand2 = operands[1];
@@ -45,7 +45,7 @@ public class Main {
                 operand2.charAt(0) != '\"' ||
                 operand1.charAt(operand1.length() - 1) != '\"' ||
                 operand2.charAt(operand2.length() - 1) != '\"')
-        {throw new Exception("Неверная матиматическая операция");}
+        {throw new Exception("Строки должны быть в кавычках");}
 
         return operand1.substring(0, operand1.length() - 1) +""+ operand2.substring(1, operand2.length());
     }
@@ -56,28 +56,35 @@ public class Main {
                 operand2.charAt(0) != '\"' ||
                 operand1.charAt(operand1.length() - 1) != '\"' ||
                 operand2.charAt(operand2.length() - 1) != '\"') {
-            throw new Exception("Неверная матиматическая операция");
+            throw new Exception("Строки должны быть в кавычках");
         }
 
         operand1 = operand1.replace(operand2,"");
 
-        return "\""+operand1+"\"";
+        return operand1;
     }
 
     private static String getResultDivision (String operand1, String operand2)throws Exception {
 
+
         if     (operand1.charAt(0) != '\"' ||
                 operand1.charAt(operand1.length() - 1) != '\"')
-        {throw new Exception("Неверная матиматическая операция");}
+        {throw new Exception("Строки должны быть в кавычках");}
 
-        int divider = Integer.parseInt(operand2);
+        if     (operand2.charAt(0) == '\"' ||
+                operand2.charAt(operand2.length() - 1) == '\"')
+        {throw new Exception("Числа нельзя выделять кавычками");}
+
+        double divider = Double.parseDouble(operand2);
+
+        if (divider % 1 != 0){throw new Exception("Число должно быть целым");}
 
         if (divider>10) {throw new Exception("Делитель не может быть больше десяти");}
         if (divider==0) {throw new Exception("Делитель не может быть равен нулю");}
 
         operand1 = operand1.substring(1,operand1.length() - 1);
 
-        int res = operand1.length() / divider;
+        int res = (int) (operand1.length() / divider);
 
         operand1 = operand1.substring(0,res);
 
@@ -88,15 +95,21 @@ public class Main {
 
         if     (operand1.charAt(0) != '\"' ||
                 operand1.charAt(operand1.length() - 1) != '\"')
-        {throw new Exception("Неверная матиматическая операция");}
+        {throw new Exception("Строки должны быть в кавычках");}
 
-        int multiplier = Integer.parseInt(operand2);
+        if     (operand2.charAt(0) == '\"' ||
+                operand2.charAt(operand2.length() - 1) == '\"')
+        {throw new Exception("Числа нельзя выделять кавычками");}
+
+        double multiplier = Double.parseDouble(operand2);
+
+        if (multiplier % 1 != 0){throw new Exception("Число должно быть целым");}
 
         if (multiplier>10) {throw new Exception("Множитель не может быть больше десяти");}
         if (multiplier==0) {throw new Exception("Множитель не может быть равен нулю");}
 
         operand1 = operand1.substring(1,operand1.length() - 1);
-        operand1 = operand1.repeat(multiplier);
+        operand1 = operand1.repeat((int) multiplier);
 
         if (operand1.length()>40){
             operand1.substring(0,42);
